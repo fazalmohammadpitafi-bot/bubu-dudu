@@ -18,7 +18,7 @@ function App() {
     if (!isForgiving) {
       setImageIndex((prev) => (prev + 1) % DubuCry.length);
       setSorryIndex((prev) => (prev + 1) % Sorries.length);
-      setYesButtonSize((prev) => Math.min(prev + 0.2, 2));
+      setYesButtonSize((prev) => Math.min(prev + 0.5, 5));
     }
   };
 

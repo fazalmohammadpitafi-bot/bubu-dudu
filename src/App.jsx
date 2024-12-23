@@ -1,90 +1,115 @@
-import { useEffect, useState } from "react";
-
-import "./index.css";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { DubuCry, Sorries } from "./support";
+import Footer from "./components/Footer";
+import Button from "./components/Button";
+import NameInput from "./components/NameInput";
+import Celebration from "./components/Celebration";
 
 function App() {
-  // States
-  const [yes, setYes] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [sorryIdx, setSorryIdx] = useState(0);
-  const [widthPrsnt, setWidthPrsnt] = useState(1);
+  const [isForgiving, setIsForgiving] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [sorryIndex, setSorryIndex] = useState(0);
+  const [yesButtonSize, setYesButtonSize] = useState(1);
+  const [name, setName] = useState("");
+  const [showCelebration, setShowCelebration] = useState(false);
 
-  const saidNo = () => {
-    if (!yes) {
-      setIndex(index + 1);
-      setSorryIdx(sorryIdx + 1);
-      setWidthPrsnt(widthPrsnt + 1);
+  const handleNo = () => {
+    if (!isForgiving) {
+      setImageIndex((prev) => (prev + 1) % DubuCry.length);
+      setSorryIndex((prev) => (prev + 1) % Sorries.length);
+      setYesButtonSize((prev) => Math.min(prev + 0.2, 2));
     }
   };
 
-  useEffect(() => {
-    if (index >= DubuCry.length) {
-      setIndex(0);
-    }
-    if (sorryIdx >= Sorries.length) {
-      setSorryIdx(0);
-    }
-  }, [index, sorryIdx]);
+  const handleYes = () => {
+    setIsForgiving(true);
+    setShowCelebration(true);
+    setTimeout(() => setShowCelebration(false), 5000);
+  };
 
   return (
-    <>
-      <div className="h-screen  w-full p-4 flex items-center justify-between flex-col">
-        <div className="flex items-center justify-center w-full flex-col ">
-          <div className="gif-center flex flex-col items-center justify-center mt-10">
-            <img
-              src={yes ? "/gifs/maangoi-bubu.gif" : DubuCry[index]}
-              alt="dudu-crying"
-              className="h-80 w-80 object-contain rounded-2xl"
-            />
-            {!yes && (
-              <div className="flex flex-col justify-center items-center text-center">
-                <big className="mt-2 text-gray-600 font-semibold text-xl">
-                  Sorry
-                </big>
-                <h1 className=" text-gray-600 font-semibold text-lg">
-                  Please forgive me🥺🥺.
-                </h1>
+    <div className="min-h-screen w-full p-4 flex flex-col justify-between bg-gradient-to-b from-blue-900 to-sky-900">
+      <main className="flex-grow flex flex-col items-center justify-center">
+        {!name && <NameInput setName={setName} />}
+
+        {name && (
+          <>
+            <motion.div
+              className="gif-container mb-4"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            >
+              <img
+                src={
+                  isForgiving ? "/gifs/maangoi-bubu.gif" : DubuCry[imageIndex]
+                }
+                alt={isForgiving ? "Bubu happy" : `${name} crying`}
+                className="h-80 w-80 object-contain rounded-2xl shadow-lg"
+              />
+            </motion.div>
+
+            <AnimatePresence>
+              {!isForgiving && (
+                <motion.div
+                  className="text-center mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                >
+                  <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                    Sorry, {name}
+                  </h1>
+                  <p className="text-lg text-gray-600 dark:text-gray-300">
+                    Please forgive me 🥺🥺
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {!isForgiving && (
+              <div className="flex flex-col items-center gap-4">
+                <Button
+                  onClick={handleYes}
+                  className="bg-green-500 hover:bg-green-600"
+                  style={{ fontSize: `${yesButtonSize}rem` }}
+                >
+                  Aww, Yes 🥰
+                </Button>
+                <Button
+                  onClick={handleNo}
+                  className="bg-red-500 hover:bg-red-600"
+                >
+                  {Sorries[sorryIndex]}
+                </Button>
               </div>
             )}
-          </div>
-          {!yes && (
-            <div className="w-full flex items-center justify-center mt-2 flex-col gap-2">
-              <button
-                onClick={() => setYes(true)}
-                className="px-3 py-2 bg-blue-400 rounded-xl text-white w-30"
-                id="yess"
-                style={{ fontSize: `${widthPrsnt}rem` }}
+
+            {isForgiving && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center"
               >
-                Aww, Yes🥰
-              </button>
-              <button
-                onClick={() => saidNo()}
-                className="px-3 py-2 bg-red-400 rounded-xl text-white w-30"
-              >
-                {Sorries[sorryIdx]}
-              </button>
-            </div>
-          )}
-        </div>
-        <footer className="w-full p-4 mt-24">
-          {yes && (
-            <div className="flex items-center justify-center">
-              <p className="text-slate-700 text-lg font-bold capitalize">
-                built by{" "}
-                <a
-                  className="text-blue-400"
-                  href="https://github.com/dipanshurdev"
-                  target="_blank"
-                >
-                  Dipanshu Rawat🙂
-                </a>
-              </p>
-            </div>
-          )}
-        </footer>
-      </div>
-    </>
+                <h2 className="text-3xl font-bold text-sky-500  mb-4">
+                  Thank you my love,
+                  <span className="text-pink-500"> {name}! ❤️</span>
+                </h2>
+                <p className="text-xl text-gray-700 dark:text-gray-300">
+                  I promise to be a better Bubu!
+                </p>
+              </motion.div>
+            )}
+          </>
+        )}
+
+        {showCelebration && <Celebration />}
+      </main>
+
+      <Footer isForgiving={isForgiving} />
+    </div>
   );
 }
 

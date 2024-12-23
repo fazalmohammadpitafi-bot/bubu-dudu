@@ -6,14 +6,14 @@ export const DubuCry = [
 ];
 
 export const Sorries = [
-  "Noo😒😠",
+  "Noo 😒😠",
   "Think again 🥺",
-  "again again 🥺",
-  "Really ?? 🥺",
-  "please ??",
-  "are you serious😣😖",
-  "is it true ?",
-  "seriouslyyy ?",
-  "🥺",
-  "pleaseezz🤕",
+  "Please reconsider 🥺",
+  "Really?? 🥺",
+  "Pretty please??",
+  "Are you serious? 😣😖",
+  "Is that your final answer?",
+  "Seriously?",
+  "🥺🥺🥺",
+  "Pleeeease 🤕",
 ];
